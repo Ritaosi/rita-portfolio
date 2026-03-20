@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rita C. Osi — Product Manager</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Sans:wght@200;300;400;500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0b0b0f;
+  --surface: #111118;
+  --surface2: #17171f;
+  --coral: #ff5c3a;
+  --amber: #f5a623;
+  --lavender: #a78bfa;
+  --text: #e8e6f0;
+  --muted: #6b6880;
+  --border: rgba(255,255,255,0.07);
+  --glow: rgba(255,92,58,0.15);
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 300;
+  overflow-x: hidden;
+  cursor: none;
+}
+
+.cursor {
+  position: fixed; width: 12px; height: 12px;
+  background: var(--coral); border-radius: 50%;
+  pointer-events: none; z-index: 9999;
+  transform: translate(-50%,-50%);
+  transition: width 0.2s, height 0.2s;
+  mix-blend-mode: screen;
+}
+.cursor-ring {
+  position: fixed; width: 40px; height: 40px;
+  border: 1px solid rgba(255,92,58,0.4); border-radius: 50%;
+  pointer-events: none; z-index: 9998;
+  transform: translate(-50%,-50%);
+  transition: width 0.2s, height 0.2s;
+}
+
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--coral); }
+
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  padding: 20px 48px;
+  display: flex; justify-content: space-between; align-items: center;
+  background: linear-gradient(to bottom, rgba(11,11,15,0.95), transparent);
+  backdrop-filter: blur(8px);
+}
+.nav-logo { font-family: 'DM Mono', monospace; font-size: 13px; letter-spacing: 0.15em; color: var(--coral); text-transform: uppercase; }
+.nav-links { display: flex; gap: 36px; }
+.nav-links a { text-decoration: none; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); transition: color 0.2s; }
+.nav-links a:hover { color: var(--text); }
+
+.hero {
+  min-height: 100vh; display: flex; align-items: center;
+  padding: 120px 48px 80px; position: relative; overflow: hidden;
+}
+.hero-bg {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 60% 50% at 70% 40%, rgba(255,92,58,0.08) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 60% at 20% 70%, rgba(167,139,250,0.06) 0%, transparent 70%);
+}
+.hero-grid {
+  position: absolute; inset: 0;
+  background-image: linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+}
+.hero-content { position: relative; z-index: 2; max-width: 900px; }
+
+.hero-tag {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--coral);
+  margin-bottom: 28px; opacity: 0; animation: fadeUp 0.6s 0.2s ease forwards;
+}
+.hero-tag::before { content: ''; width: 24px; height: 1px; background: var(--coral); }
+
+h1.hero-name {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(64px, 10vw, 120px); font-weight: 900; line-height: 0.92; letter-spacing: -0.02em; margin-bottom: 8px;
+  opacity: 0; animation: fadeUp 0.7s 0.35s ease forwards;
+}
+h1.hero-name em { font-style: italic; color: var(--coral); }
+
+.hero-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(22px, 4vw, 48px); font-weight: 400; font-style: italic; color: var(--muted); margin-bottom: 40px;
+  opacity: 0; animation: fadeUp 0.7s 0.5s ease forwards;
+}
+.hero-desc {
+  font-size: 16px; line-height: 1.8; color: rgba(232,230,240,0.7); max-width: 520px; margin-bottom: 48px;
+  opacity: 0; animation: fadeUp 0.7s 0.65s ease forwards;
+}
+.hero-ctas { display: flex; gap: 16px; flex-wrap: wrap; opacity: 0; animation: fadeUp 0.7s 0.8s ease forwards; }
+
+.btn-primary {
+  padding: 14px 32px; background: var(--coral); color: white; text-decoration: none;
+  font-size: 12px; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; border-radius: 2px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(255,92,58,0.35); }
+.btn-ghost {
+  padding: 14px 32px; border: 1px solid var(--border); color: var(--text); text-decoration: none;
+  font-size: 12px; font-weight: 400; letter-spacing: 0.15em; text-transform: uppercase; border-radius: 2px;
+  transition: border-color 0.2s, color 0.2s;
+}
+.btn-ghost:hover { border-color: var(--coral); color: var(--coral); }
+
+.hero-stats {
+  position: absolute; right: 48px; bottom: 60px;
+  display: flex; flex-direction: column; gap: 24px;
+  opacity: 0; animation: fadeIn 0.8s 1s ease forwards;
+}
+.stat-item { text-align: right; }
+.stat-num { font-family: 'Playfair Display', serif; font-size: 36px; font-weight: 700; color: var(--text); line-height: 1; }
+.stat-num span { color: var(--coral); }
+.stat-label { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+
+.scroll-hint {
+  position: absolute; bottom: 32px; left: 48px;
+  display: flex; align-items: center; gap: 12px;
+  font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted);
+  opacity: 0; animation: fadeIn 1s 1.2s ease forwards;
+}
+.scroll-line { width: 40px; height: 1px; background: var(--muted); position: relative; overflow: hidden; }
+.scroll-line::after { content: ''; position: absolute; left: -100%; top: 0; width: 100%; height: 100%; background: var(--coral); animation: scanLine 2s ease infinite; }
+@keyframes scanLine { to { left: 200%; } }
+
+section { padding: 100px 48px; position: relative; }
+
+.section-label {
+  font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--coral);
+  margin-bottom: 16px; display: flex; align-items: center; gap: 12px;
+}
+.section-label::after { content: ''; flex: 1; max-width: 60px; height: 1px; background: var(--coral); opacity: 0.4; }
+
+.section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(36px, 5vw, 64px); font-weight: 700; line-height: 1.05; letter-spacing: -0.02em; margin-bottom: 60px;
+}
+
+/* EXPERIENCE */
+#experience { background: var(--surface); }
+.exp-grid { display: grid; gap: 2px; }
+.exp-card {
+  background: var(--surface2); padding: 40px 44px;
+  display: grid; grid-template-columns: 1fr 2fr; gap: 40px;
+  position: relative; border-left: 3px solid transparent;
+  transition: border-color 0.3s, background 0.3s; overflow: hidden;
+}
+.exp-card::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, var(--glow), transparent); opacity: 0; transition: opacity 0.3s; }
+.exp-card:hover { border-left-color: var(--coral); background: #1a1a25; }
+.exp-card:hover::before { opacity: 1; }
+.exp-company { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+.exp-period { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--coral); letter-spacing: 0.1em; margin-bottom: 8px; }
+.exp-location { font-size: 12px; color: var(--muted); }
+.exp-role { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--amber); margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.05em; }
+.exp-bullets { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.exp-bullets li { font-size: 14px; line-height: 1.7; color: rgba(232,230,240,0.75); padding-left: 16px; position: relative; }
+.exp-bullets li::before { content: '→'; position: absolute; left: 0; color: var(--coral); font-size: 12px; }
+.exp-highlight { color: var(--text); font-weight: 500; }
+
+/* SKILLS */
+.skills-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start; }
+.skills-desc { font-size: 18px; line-height: 1.8; color: rgba(232,230,240,0.7); font-family: 'Playfair Display', serif; font-style: italic; }
+.skills-groups { display: flex; flex-direction: column; gap: 28px; }
+.skill-group-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
+.skill-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+.skill-tag { padding: 7px 14px; border: 1px solid var(--border); font-size: 12px; letter-spacing: 0.05em; border-radius: 2px; color: var(--text); transition: all 0.2s; cursor: default; }
+.skill-tag:hover { border-color: var(--coral); color: var(--coral); background: rgba(255,92,58,0.05); }
+.skill-tag.featured { background: rgba(255,92,58,0.1); border-color: rgba(255,92,58,0.3); color: var(--coral); }
+
+/* HONORS */
+#honors { background: var(--surface); }
+.honors-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; }
+.honor-card { background: var(--surface2); padding: 40px 36px; position: relative; overflow: hidden; transition: background 0.3s; }
+.honor-card:hover { background: #1c1c26; }
+.honor-num { font-family: 'Playfair Display', serif; font-size: 80px; font-weight: 900; color: rgba(255,92,58,0.07); line-height: 1; position: absolute; top: 16px; right: 20px; letter-spacing: -0.04em; }
+.honor-icon { width: 40px; height: 40px; border: 1px solid var(--border); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; margin-bottom: 20px; }
+.honor-title { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; margin-bottom: 10px; line-height: 1.2; }
+.honor-desc { font-size: 13px; line-height: 1.7; color: var(--muted); }
+
+/* PROJECTS */
+.projects-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2px; }
+
+.project-card {
+  background: var(--surface2);
+  padding: 40px;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.3s;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  /* NOT an anchor by default — JS handles click */
+}
+.project-card:hover { background: #15151e; cursor: pointer; }
+.project-card::after {
+  content: ''; position: absolute; bottom: 0; left: 0;
+  width: 0; height: 2px;
+  background: linear-gradient(90deg, var(--coral), var(--amber));
+  transition: width 0.4s ease;
+}
+.project-card:hover::after { width: 100%; }
+
+.project-tech { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.2em; color: var(--amber); text-transform: uppercase; margin-bottom: 12px; }
+.project-title { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; margin-bottom: 12px; line-height: 1.2; }
+.project-desc { font-size: 13.5px; line-height: 1.7; color: rgba(232,230,240,0.65); flex: 1; }
+
+/* Link row at bottom of card */
+.project-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+.project-link-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border: 1px solid rgba(255,92,58,0.3);
+  border-radius: 2px;
+  background: rgba(255,92,58,0.05);
+  color: var(--coral);
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: background 0.2s, border-color 0.2s, transform 0.15s;
+  cursor: pointer;
+}
+.project-link-btn:hover {
+  background: rgba(255,92,58,0.12);
+  border-color: var(--coral);
+  transform: translateY(-1px);
+}
+.project-link-btn svg { width: 10px; height: 10px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+/* No-link card — no pointer */
+.project-card.no-link { cursor: default; }
+
+/* EDUCATION */
+#education { background: var(--surface); }
+.edu-flex { display: flex; flex-direction: column; gap: 2px; }
+.edu-card { background: var(--surface2); padding: 36px 44px; display: flex; justify-content: space-between; align-items: center; gap: 24px; border-left: 3px solid transparent; transition: all 0.3s; }
+.edu-card:hover { background: #1a1a24; border-left-color: var(--lavender); }
+.edu-school { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+.edu-degree { font-size: 13px; color: rgba(232,230,240,0.6); margin-bottom: 4px; }
+.edu-period { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--lavender); letter-spacing: 0.15em; }
+.edu-gpa { font-family: 'Playfair Display', serif; font-size: 42px; font-weight: 900; color: var(--text); white-space: nowrap; flex-shrink: 0; }
+.edu-gpa span { color: var(--lavender); font-size: 18px; }
+
+/* CONTACT */
+#contact { min-height: 60vh; display: flex; flex-direction: column; justify-content: center; text-align: center; overflow: hidden; position: relative; }
+.contact-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 70% 60% at center, rgba(255,92,58,0.06) 0%, transparent 70%); }
+.contact-giant { font-family: 'Playfair Display', serif; font-size: clamp(60px, 14vw, 180px); font-weight: 900; line-height: 1; letter-spacing: -0.03em; color: rgba(255,255,255,0.03); position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); white-space: nowrap; }
+.contact-content { position: relative; z-index: 2; }
+.contact-intro { font-family: 'Playfair Display', serif; font-size: 18px; font-style: italic; color: var(--muted); margin-bottom: 20px; }
+.contact-email { font-family: 'Playfair Display', serif; font-size: clamp(28px, 5vw, 56px); font-weight: 700; color: var(--text); text-decoration: none; display: block; margin-bottom: 40px; transition: color 0.2s; }
+.contact-email:hover { color: var(--coral); }
+.contact-links { display: flex; gap: 24px; justify-content: center; }
+.contact-link { padding: 12px 28px; border: 1px solid var(--border); color: var(--muted); text-decoration: none; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; border-radius: 2px; transition: all 0.2s; font-family: 'DM Mono', monospace; }
+.contact-link:hover { border-color: var(--coral); color: var(--coral); }
+
+footer { padding: 24px 48px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: var(--muted); letter-spacing: 0.1em; }
+
+@keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.reveal { transition: opacity 0.65s ease, transform 0.65s ease; }
+.reveal.will-animate { opacity: 0; transform: translateY(28px); }
+.reveal.visible { opacity: 1 !important; transform: none !important; }
+
+@media (max-width: 768px) {
+  nav { padding: 16px 24px; } .nav-links { display: none; }
+  section { padding: 70px 24px; } .hero { padding: 100px 24px 70px; }
+  .hero-stats { display: none; }
+  .exp-card { grid-template-columns: 1fr; } .skills-layout { grid-template-columns: 1fr; }
+  .honors-grid { grid-template-columns: 1fr; } .projects-grid { grid-template-columns: 1fr; }
+  .edu-card { flex-direction: column; align-items: flex-start; }
+}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<nav>
+  <div class="nav-logo">Rita C. Osi</div>
+  <div class="nav-links">
+    <a href="#experience">Experience</a>
+    <a href="#skills">Skills</a>
+    <a href="#honors">Honors</a>
+    <a href="#projects">Projects</a>
+    <a href="#education">Education</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-tag">Product Manager · Builder · Researcher</div>
+    <h1 class="hero-name">Rita C.<br><em>Osi</em></h1>
+    <p class="hero-title">Turning complexity into clarity</p>
+    <p class="hero-desc">Computer Science student at Jackson State University & incoming Columbia MS Technology Management candidate. I build products that matter — from campus apps to enterprise billing systems at IBM & HashiCorp.</p>
+    <div class="hero-ctas">
+      <a href="#experience" class="btn-primary">View My Work</a>
+      <a href="#contact" class="btn-ghost">Get In Touch</a>
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div class="stat-item"><div class="stat-num">2000<span>+</span></div><div class="stat-label">Active Users</div></div>
+    <div class="stat-item"><div class="stat-num">35<span>+</span></div><div class="stat-label">User Interviews</div></div>
+    <div class="stat-item"><div class="stat-num">4.0</div><div class="stat-label">GPA</div></div>
+  </div>
+  <div class="scroll-hint"><div class="scroll-line"></div>Scroll</div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="section-label">02 — Experience</div>
+  <h2 class="section-title">Where I've<br>Built Things</h2>
+  <div class="exp-grid">
+    <div class="exp-card reveal">
+      <div class="exp-meta">
+        <div class="exp-company">PopUp</div>
+        <div class="exp-period">Sep 2025 – Present</div>
+        <div class="exp-location">Jackson, MS</div>
+      </div>
+      <div class="exp-content">
+        <div class="exp-role">Founding Product Manager</div>
+        <ul class="exp-bullets">
+          <li>Built an iOS campus app connecting <span class="exp-highlight">JSU students to campus events</span> with an engineer, designer & marketer</li>
+          <li>Led user research & problem validation, driving <span class="exp-highlight">2000+ users</span> daily active users</li>
+          <li>Analyzed engagement data using <span class="exp-highlight">SQL</span> to refine discovery features and improve retention</li>
+        </ul>
+      </div>
+    </div>
+    <div class="exp-card reveal">
+      <div class="exp-meta">
+        <div class="exp-company">IBM</div>
+        <div class="exp-period">May – Aug 2025</div>
+        <div class="exp-location">San Francisco, CA</div>
+      </div>
+      <div class="exp-content">
+        <div class="exp-role">Product Manager Intern — HCP Billing</div>
+        <ul class="exp-bullets">
+          <li>Collaborated with <span class="exp-highlight">5 engineers & 2 designers</span> to enhance UI features, achieving a <span class="exp-highlight">15% conversion lift</span></li>
+          <li>Created 3 PRDs reducing feature delivery time by <span class="exp-highlight">20%</span></li>
+          <li>Conducted <span class="exp-highlight">20+ customer interviews</span> uncovering 5 pain points for billing improvements</li>
+          <li>Proposed A/B testing strategy across <span class="exp-highlight">4 experiments</span> to optimize performance</li>
+        </ul>
+      </div>
+    </div>
+    <div class="exp-card reveal">
+      <div class="exp-meta">
+        <div class="exp-company">HashiCorp</div>
+        <div class="exp-period">Jun – Aug 2024</div>
+        <div class="exp-location">Remote</div>
+      </div>
+      <div class="exp-content">
+        <div class="exp-role">Product Manager Intern — Identity & Access Management</div>
+        <ul class="exp-bullets">
+          <li>Delivered PRD with 6 engineers reducing planning time by <span class="exp-highlight">25%</span></li>
+          <li>Conducted <span class="exp-highlight">15 in-depth interviews</span> shaping product strategy and feature development</li>
+          <li>Analyzed customer data from <span class="exp-highlight">2,000+ accounts</span> to identify actionable trends</li>
+          <li>Co-authored a feature release blog post driving <span class="exp-highlight">85%+ adoption</span> of project-level service principals</li>
+        </ul>
+      </div>
+    </div>
+    <div class="exp-card reveal">
+      <div class="exp-meta">
+        <div class="exp-company">Indiana University</div>
+        <div class="exp-period">Jun – Jul 2023</div>
+        <div class="exp-location">Bloomington, IN</div>
+      </div>
+      <div class="exp-content">
+        <div class="exp-role">Summer Research Intern — School of Informatics</div>
+        <ul class="exp-bullets">
+          <li>Researched <span class="exp-highlight">LLMCarbon</span> — a framework for modeling the carbon footprint of Large Language Models</li>
+          <li>Collaborated with 4 engineers evaluating 3 ML architecture approaches to overcome existing tool limitations</li>
+          <li>Contributed to two published research papers</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="section-label">03 — Skills</div>
+  <h2 class="section-title">The Toolkit</h2>
+  <div class="skills-layout">
+    <div class="skills-desc reveal">"I believe great products live at the intersection of user empathy, technical fluency, and business clarity. I bring all three."</div>
+    <div class="skills-groups reveal">
+      <div>
+        <div class="skill-group-label">Product</div>
+        <div class="skill-tags">
+          <span class="skill-tag featured">PRD Writing</span><span class="skill-tag featured">User Research</span><span class="skill-tag featured">A/B Testing</span>
+          <span class="skill-tag">Roadmapping</span><span class="skill-tag">Competitive Analysis</span><span class="skill-tag">Stakeholder Management</span>
+        </div>
+      </div>
+      <div>
+        <div class="skill-group-label">Engineering</div>
+        <div class="skill-tags">
+          <span class="skill-tag featured">Python</span><span class="skill-tag featured">SQL</span>
+          <span class="skill-tag">Swift</span><span class="skill-tag">C++</span><span class="skill-tag">HTML / CSS</span><span class="skill-tag">Julia</span>
+        </div>
+      </div>
+      <div>
+        <div class="skill-group-label">Tools & Platforms</div>
+        <div class="skill-tags">
+          <span class="skill-tag">Figma</span><span class="skill-tag">Jira</span><span class="skill-tag">Confluence</span><span class="skill-tag">Notion</span>
+          <span class="skill-tag">Miro</span><span class="skill-tag">Snowflake</span><span class="skill-tag">Sigma</span><span class="skill-tag">Lucidchart</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HONORS -->
+<section id="honors">
+  <div class="section-label">04 — Recognition</div>
+  <h2 class="section-title">Honors &<br>Fellowships</h2>
+  <div class="honors-grid">
+    <div class="honor-card reveal"><div class="honor-num">01</div><div class="honor-icon">🌿</div><div class="honor-title">Ginkgo Bioworks Cultivate Fellowship</div><div class="honor-desc">Selected for a prestigious fellowship at the intersection of biology and technology, exploring the future of engineering living systems.</div></div>
+    <div class="honor-card reveal"><div class="honor-num">02</div><div class="honor-icon">🎓</div><div class="honor-title">Provost Academic Scholar</div><div class="honor-desc">Recognized for outstanding academic achievement — maintaining a perfect 4.0 GPA throughout the Computer Science program at Jackson State University.</div></div>
+    <div class="honor-card reveal"><div class="honor-num">03</div><div class="honor-icon">⚡</div><div class="honor-title">Entergy Power Your Future Award</div><div class="honor-desc">Awarded for exemplifying leadership potential and commitment to making a lasting impact in the community and tech industry.</div></div>
+    <div class="honor-card reveal"><div class="honor-num">04</div><div class="honor-icon">🏛️</div><div class="honor-title">W.E.B. Du Bois Honors College</div><div class="honor-desc">Maria Luisa Alvarez Harvey Honors College member — a community of high-achieving scholars committed to academic excellence and service.</div></div>
+    <div class="honor-card reveal"><div class="honor-num">05</div><div class="honor-icon">🚀</div><div class="honor-title">Black Venture Capital Consortium</div><div class="honor-desc">Acquired PM principles from experienced leaders and co-founded a student startup, leading MVP planning tested by 20 early users.</div></div>
+    <div class="honor-card reveal"><div class="honor-num">06</div><div class="honor-icon">📊</div><div class="honor-title">Bloomberg TechLab</div><div class="honor-desc">Built a JavaScript portfolio manager in collaboration with Bloomberg Engineers, presented to 50+ participants at Queen's Edition.</div></div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="section-label">05 — Projects</div>
+  <h2 class="section-title">Things I've<br>Shipped</h2>
+  <div class="projects-grid">
+
+    <!-- PopUp -->
+    <div class="project-card reveal">
+      <div class="project-tech">iOS · Swift · Xcode</div>
+      <div class="project-title">PopUp — Campus Events App</div>
+      <div class="project-desc">Built from the ground up as Founding PM. Connected JSU students to campus events, achieving 2,000+ active users and strong daily engagement through user-research-driven feature development.</div>
+      <div class="project-links">
+        <a class="project-link-btn" href="https://apps.apple.com/us/app/popup-campus/id6752616780" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          App Store
+        </a>
+      </div>
+    </div>
+
+    <!-- Cross Project Service Principals -->
+    <div class="project-card reveal">
+      <div class="project-tech">HashiCorp · IAM · HCP</div>
+      <div class="project-title">Cross Project Service Principals</div>
+      <div class="project-desc">Led product strategy at HashiCorp to expand HCP service principals across projects — enabling teams to manage access and role assignments at scale. Drove 85%+ adoption post-launch and co-authored the official feature release blog post.</div>
+      <div class="project-links">
+        <a class="project-link-btn" href="https://www.hashicorp.com/blog/hcp-expands-service-principals-access-options-and-role-assignments" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          Read Blog Post
+        </a>
+      </div>
+    </div>
+
+    <!-- Bloomberg -->
+    <div class="project-card no-link reveal">
+      <div class="project-tech">JavaScript · HTML · CSS</div>
+      <div class="project-title">Bloomberg Portfolio Manager</div>
+      <div class="project-desc">Collaborated with Bloomberg Engineers at TechLab Queen's Edition to build a real-time JavaScript-based portfolio manager, demonstrated to an audience of 50+ engineers and executives.</div>
+    </div>
+
+    <!-- LLMCarbon -->
+    <div class="project-card reveal">
+      <div class="project-tech">ML · Carbon Modeling · Research</div>
+      <div class="project-title">LLMCarbon Framework</div>
+      <div class="project-desc">Contributed to LLMCarbon at Indiana University — a framework for modeling the end-to-end carbon footprint of Large Language Models, helping teams make more sustainable ML infrastructure decisions. Published in two peer-reviewed venues.</div>
+      <div class="project-links">
+        <a class="project-link-btn" href="https://arxiv.org/abs/2309.14393" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          arXiv Paper
+        </a>
+        <a class="project-link-btn" href="https://montrealethics.ai/llmcarbon-modeling-the-end-to-end-carbon-footprint-of-large-language-models/" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          Montreal AI Ethics
+        </a>
+      </div>
+    </div>
+
+    <!-- Crime Pattern Research -->
+    <div class="project-card no-link reveal">
+      <div class="project-tech">Julia · ANOVA · Statistics</div>
+      <div class="project-title">Crime Pattern Research</div>
+      <div class="project-desc">Analyzed 30K+ crime data points using Julia, ANOVA, Welch's t-test, and point-biserial correlation to identify nuanced gender-based differences in crime type patterns at Jackson State University.</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- EDUCATION -->
+<section id="education">
+  <div class="section-label">06 — Education</div>
+  <h2 class="section-title">Academic<br>Foundation</h2>
+  <div class="edu-flex">
+    <div class="edu-card reveal">
+      <div>
+        <div class="edu-school">Columbia University</div>
+        <div class="edu-degree">M.S. Technology Management</div>
+        <div class="edu-period">Aug 2026 – May 2027 (Expected) · New York, NY</div>
+      </div>
+      <div class="edu-gpa">MS<span> Incoming</span></div>
+    </div>
+    <div class="edu-card reveal">
+      <div>
+        <div class="edu-school">Jackson State University</div>
+        <div class="edu-degree">B.S. Computer Science · Provost Scholar · Honors College</div>
+        <div class="edu-period">Aug 2022 – May 2026 (Expected) · Jackson, MS</div>
+        <div style="margin-top:8px; font-size:12px; color:var(--muted);">Calculus I–III · Algorithm Design · Operating Systems · Data Structures</div>
+      </div>
+      <div class="edu-gpa">4.0<span>/4.0</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-bg"></div>
+  <div class="contact-giant">RITA</div>
+  <div class="contact-content">
+    <div class="section-label" style="justify-content:center; margin-bottom:24px;">07 — Contact</div>
+    <p class="contact-intro">Let's build something great together</p>
+    <a href="mailto:chukwunyereosi@gmail.com" class="contact-email">chukwunyereosi@gmail.com</a>
+    <div class="contact-links">
+      <a href="https://www.linkedin.com/in/rita-osi/" target="_blank" class="contact-link">LinkedIn</a>
+      <a href="https://github.com/Ritaosi" target="_blank" class="contact-link">GitHub</a>
+      <!-- <a href="tel:4158671844" class="contact-link">(415) 867-1844</a> -->
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span>© 2025 Rita C. Osi</span>
+  <span>Product Manager · Jackson, MS</span>
+</footer>
+
+<script>
+// Custom cursor
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursorRing');
+let mx = 0, my = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  cursor.style.left = mx + 'px'; cursor.style.top = my + 'px';
+});
+function animateRing() {
+  rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
+  ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+  requestAnimationFrame(animateRing);
+}
+animateRing();
+document.querySelectorAll('a, button').forEach(el => {
+  el.addEventListener('mouseenter', () => { cursor.style.width='6px'; cursor.style.height='6px'; ring.style.width='60px'; ring.style.height='60px'; });
+  el.addEventListener('mouseleave', () => { cursor.style.width='12px'; cursor.style.height='12px'; ring.style.width='40px'; ring.style.height='40px'; });
+});
+
+// Scroll reveal
+window.addEventListener('load', () => {
+  const els = document.querySelectorAll('.reveal');
+  els.forEach(el => el.classList.add('will-animate'));
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const el = entry.target;
+        const siblings = [...el.parentElement.querySelectorAll('.reveal')];
+        const idx = siblings.indexOf(el);
+        setTimeout(() => {
+          el.classList.add('visible');
+          el.classList.remove('will-animate');
+        }, idx * 90);
+        observer.unobserve(el);
+      }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+
+  els.forEach(el => observer.observe(el));
+
+  // Reveal anything already in viewport
+  els.forEach(el => {
+    const rect = el.getBoundingClientRect();
+    if (rect.top < window.innerHeight) {
+      el.classList.add('visible');
+      el.classList.remove('will-animate');
+      observer.unobserve(el);
+    }
+  });
+});
+</script>
+</body>
+</html>
